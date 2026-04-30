@@ -1,0 +1,146 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics - AI Traffic Monitoring System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="dashboard-page">
+
+        <header class="topbar">
+            <div class="topbar-left">
+                <div class="mini-logo">LOGO</div>
+                <h2>AI Traffic System</h2>
+            </div>
+
+            <nav class="topbar-nav">
+                <a href="{{ url_for('dashboard') }}" class="nav-link">Dashboard</a>
+                <a href="{{ url_for('analytics') }}" class="nav-link active">Analytics</a>
+                <a href="{{ url_for('models_page') }}" class="nav-link">Models</a>
+            </nav>
+
+            <div class="topbar-user">
+                <span>User Name</span>
+            </div>
+        </header>
+
+        <main class="analytics-page-layout">
+            <section class="analytics-content">
+
+                <div class="hero-panel">
+                    <h1>Model Performance Analytics</h1>
+                    <p>Compare model performance overall or for a single selected sensor.</p>
+                </div>
+
+                <div class="panel analytics-filter-panel">
+                    <h3>Analytics Filters</h3>
+
+                    <div class="analytics-filter-grid">
+                        <div class="form-group">
+                            <label for="analyticsMode">View Mode</label>
+                            <select id="analyticsMode">
+                                <option value="all" selected>All Sensors</option>
+                                <option value="sensor">Single Sensor</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="analyticsSensor">Select Sensor</label>
+                            <select id="analyticsSensor" disabled>
+                                <option value="">Select a sensor</option>
+                                {% for s in supported_sensors %}
+                                    <option value="{{ s }}">{{ s }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="form-group analytics-filter-btn-wrap">
+                            <label>&nbsp;</label>
+                            <button class="action-btn" id="applyAnalyticsBtn">APPLY ANALYSIS</button>
+                        </div>
+                    </div>
+
+                    <div id="analyticsStatusMessage" class="status-box"></div>
+                </div>
+
+                <div class="analytics-metrics-grid">
+                    <div class="metric-card">
+                        <h4>Avg MAE</h4>
+                        <p id="mae">--</p>
+                        <span>Average absolute error</span>
+                    </div>
+
+                    <div class="metric-card">
+                        <h4>Avg RMSE</h4>
+                        <p id="rmse">--</p>
+                        <span>Root mean squared error</span>
+                    </div>
+
+                    <div class="metric-card">
+                        <h4>Avg MAPE</h4>
+                        <p id="mape">--</p>
+                        <span>Percentage error</span>
+                    </div>
+
+                    <div class="metric-card">
+                        <h4>Avg R² Score</h4>
+                        <p id="r2">--</p>
+                        <span>Overall fit quality</span>
+                    </div>
+                </div>
+<div class="analytics-chart-grid">
+    <div class="panel analytics-chart-panel">
+        <h3>Model Comparison - Bar Chart</h3>
+        <div class="chart-placeholder analytics-chart-wrap">
+            <canvas id="comparisonChart"></canvas>
+        </div>
+    </div>
+
+    <div class="panel analytics-chart-panel">
+        <h3>Model Comparison - Line Chart</h3>
+        <div class="chart-placeholder analytics-chart-wrap">
+            <canvas id="lineChart"></canvas>
+        </div>
+    </div>
+</div>
+       
+
+    
+
+                <div class="analytics-lower-grid">
+                    <div class="panel comparison-table-panel">
+                        <h3>Performance Table</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Model</th>
+                                    <th>MAE</th>
+                                    <th>RMSE</th>
+                                    <th>MAPE</th>
+                                    <th>R²</th>
+                                </tr>
+                            </thead>
+                            <tbody id="modelTable"></tbody>
+                        </table>
+                    </div>
+
+                    <div class="panel analytics-summary-panel">
+                        <h3>Best Model</h3>
+                        <div class="best-model-box">
+                            <h4 id="bestModelName">--</h4>
+                            <p id="bestModelText">--</p>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/analytics.js') }}"></script>
+</body>
+</html>

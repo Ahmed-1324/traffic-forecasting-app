@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Models - AI Traffic Monitoring System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<div class="dashboard-page">
+
+    <header class="topbar">
+        <div class="topbar-left">
+            <div class="mini-logo">LOGO</div>
+            <h2>AI Traffic System</h2>
+        </div>
+
+        <nav class="topbar-nav">
+            <a href="{{ url_for('dashboard') }}" class="nav-link">Dashboard</a>
+            <a href="{{ url_for('analytics') }}" class="nav-link">Analytics</a>
+            <a href="{{ url_for('models_page') }}" class="nav-link active">Models</a>
+        </nav>
+
+        <div class="topbar-user">
+            <span>User Name</span>
+        </div>
+    </header>
+
+    <main class="dashboard-layout">
+
+        <aside class="sidebar">
+            <div class="panel">
+                <h3>Model Filters</h3>
+
+                <div class="form-group">
+                    <label for="statusFilter">Status</label>
+                    <select id="statusFilter">
+                        <option value="all">All</option>
+                        <option value="active">Active</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="typeFilter">Model Type</label>
+                    <select id="typeFilter">
+                        <option value="all">All Models</option>
+                        <option value="machine-learning">Machine Learning</option>
+                        <option value="deep-learning">Deep Learning</option>
+                    </select>
+                </div>
+
+                <button class="action-btn" id="filterModelsBtn">FILTER MODELS</button>
+                <div id="modelsStatusMessage" class="status-box"></div>
+            </div>
+        </aside>
+
+        <section class="main-content">
+
+            <div class="hero-panel">
+                <h1>Model Management</h1>
+                <p>View the pre-trained models used for upload-based 1-hour traffic forecasting.</p>
+            </div>
+
+            <div class="models-overview-grid">
+                <div class="info-card">
+                    <h4>Active Models</h4>
+                    <p>2</p>
+                </div>
+
+                <div class="info-card">
+                    <h4>Training Mode</h4>
+                    <p>Offline</p>
+                </div>
+
+                <div class="info-card">
+                    <h4>Forecast Horizon</h4>
+                    <p>1 Hour</p>
+                </div>
+
+                <div class="info-card">
+                    <h4>System Status</h4>
+                    <p>Online</p>
+                </div>
+            </div>
+
+            <div class="content-grid models-grid">
+
+                <div class="panel">
+                    <h3>Model Registry</h3>
+                    <div class="model-list" id="modelList"></div>
+                </div>
+
+                <div class="panel">
+                    <h3>Selected Model Information</h3>
+
+                    <div class="selected-model-box">
+                        <div class="selected-row">
+                            <span>Model Name</span>
+                            <strong id="selectedModelName">--</strong>
+                        </div>
+
+                        <div class="selected-row">
+                            <span>Type</span>
+                            <strong id="selectedModelType">--</strong>
+                        </div>
+
+                        <div class="selected-row">
+                            <span>Status</span>
+                            <strong id="selectedModelStatus">--</strong>
+                        </div>
+
+                        <div class="selected-row">
+                            <span>Deployment Role</span>
+                            <strong id="selectedModelRole">--</strong>
+                        </div>
+
+                        <div class="selected-row">
+                            <span>Input Shape</span>
+                            <strong id="selectedModelInput">--</strong>
+                        </div>
+
+                        <div class="selected-row">
+                            <span>Output Shape</span>
+                            <strong id="selectedModelOutput">--</strong>
+                        </div>
+
+                        <div class="selected-row">
+                            <span>Feature Set</span>
+                            <strong id="selectedModelFeatures">--</strong>
+                        </div>
+
+                        <div class="selected-row">
+                            <span>Evaluation Metrics</span>
+                            <strong id="selectedModelMetrics">Use Analytics Page</strong>
+                        </div>
+                    </div>
+
+                    <div class="model-actions">
+    				<button class="secondary-btn" id="viewAnalyticsBtn">VIEW ANALYTICS</button>
+    				<button class="secondary-btn" id="runPredictionBtn">RUN PREDICTION TEST</button>
+    				<button class="secondary-btn" id="toggleModelBtn">DISABLE MODEL</button>
+			</div>
+                </div>
+
+            </div>
+
+            <div class="panel table-panel">
+                <h3>Model Management Table</h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Model Name</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                        <th>Deployment Role</th>
+                        <th>Input Shape</th>
+                        <th>Output</th>
+                        <th>Training Mode</th>
+                    </tr>
+                    </thead>
+                    <tbody id="modelsTableBody"></tbody>
+                </table>
+            </div>
+
+        </section>
+    </main>
+</div>
+
+<script src="{{ url_for('static', filename='js/models.js') }}"></script>
+</body>
+</html>

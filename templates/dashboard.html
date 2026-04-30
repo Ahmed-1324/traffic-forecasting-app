@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - AI Traffic Monitoring System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+</head>
+<body>
+    <div class="dashboard-page">
+
+        <header class="topbar">
+            <div class="topbar-left">
+                <div class="mini-logo">LOGO</div>
+                <h2>AI Traffic System</h2>
+            </div>
+
+            <nav class="topbar-nav">
+                <a href="{{ url_for('dashboard') }}" class="nav-link active">Dashboard</a>
+                <a href="{{ url_for('analytics') }}" class="nav-link">Analytics</a>
+                <a href="{{ url_for('models_page') }}" class="nav-link">Models</a>
+            </nav>
+
+            <div class="topbar-user">
+                <span>User Name</span>
+            </div>
+        </header>
+
+        <main class="dashboard-layout">
+
+            <aside class="sidebar">
+                <div class="panel">
+                    <h3>Filters & Controls</h3>
+
+                    <div class="form-group">
+                        <label for="date">Select Date</label>
+                        <input
+                            type="date"
+                            id="date"
+                            min="{{ min_date }}"
+                            max="{{ max_date }}"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="time">Select Time</label>
+                        <select id="time" required>
+                            <option value="">Select a date first</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="sensor">Select Sensor</label>
+                        <select id="sensor" required>
+                            {% for s in supported_sensors %}
+                                <option value="{{ s }}">{{ s }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="horizon">Forecast Horizon</label>
+                        <select id="horizon" required>
+                            <option value="1 Hour" selected>1 Hour</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="model">Select Model</label>
+                        <select id="model" required>
+                            	<option value="XGBoost" selected>XGBoost</option>
+    				<option value="Transformer">Transformer</option>
+                        </select>
+                    </div>
+
+                    <hr style="margin: 18px 0;">
+
+                    <div class="form-group">
+                        <label for="datasetFile">Upload Dataset CSV</label>
+                        <label class="custom-file-upload">
+    				<input type="file" id="datasetFile" accept=".csv">
+    				<span id="fileName">Choose CSV Dataset</span>
+			</label>
+                    </div>
+
+                    <button class="action-btn" id="uploadBtn" type="button">UPLOAD DATASET</button>
+
+                    <button class="action-btn" id="predictBtn" type="button" style="margin-top: 12px;">
+                        APPLY FORECAST
+                    </button>
+
+                    <div id="statusMessage" style="margin-top: 12px; font-size: 14px;"></div>
+                </div>
+            </aside>
+
+            <section class="main-content">
+                <div class="hero-panel">
+                    <h1>AI Traffic Monitoring & 1-Hour Congestion Forecasting System</h1>
+                    <p>Forecast traffic speed and congestion for a selected sensor using the chosen model.</p>
+                </div>
+
+                <div class="info-grid">
+                    <div class="info-card">
+                        <h4>Sensor ID</h4>
+                        <p id="sensor_id">--</p>
+                    </div>
+
+
+			<div class="info-card">
+    				<h4>Congestion Method</h4>
+    				<p id="congestion_method">--</p>
+			</div>
+
+                    <div class="info-card">
+                        <h4>Current Speed</h4>
+                        <p id="current_speed">--</p>
+                    </div>
+
+                    <div class="info-card">
+                        <h4>Predicted Avg Speed</h4>
+                        <p id="pred_avg">--</p>
+                    </div>
+
+                    <div class="info-card">
+                        <h4>Traffic Condition</h4>
+                        <p><span id="congestion" class="congestion-badge">--</span></p>
+                    </div>
+
+		   <div class="info-card">
+    			<h4>Prediction Mode</h4>
+    			<p id="prediction_mode">--</p>
+		   </div>
+
+	</div>
+
+                <div class="content-grid">
+                    <div class="panel chart-panel">
+                        <h3>Forecast Results</h3>
+                        <div class="chart-placeholder" style="height: 340px;">
+                            <canvas id="predictionChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="panel map-panel">
+                        <h3>Sensor Location</h3>
+                        <div class="map-placeholder">
+                            <div id="map" style="height: 100%; width: 100%; min-height: 320px;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-grid">
+                    <div class="panel chart-panel">
+                        <h3 id="errorChartTitle">Error Over Time</h3>
+                        <div class="chart-placeholder" style="height: 340px;">
+                            <canvas id="errorChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="panel table-panel">
+                        <h3>Selected Sensor Information</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Time</th>
+                                    <th>Sensor ID</th>
+                                    <th>Forecast Horizon</th>
+                                    <th>Model</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td id="table_date">--</td>
+                                    <td id="table_time">--</td>
+                                    <td id="table_sensor">--</td>
+                                    <td id="tableHorizon">1 Hour</td>
+                                    <td id="table_model">--</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+</html>
